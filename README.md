@@ -27,7 +27,7 @@ print(func_docs.returns)
 
 # Todo
 
-* Add support for Sphinx (https://github.com/rahulrrixe/parinx)
+* Add support for Sphinx documentation style (https://github.com/rahulrrixe/parinx)
 * Autodetect documentation style (https://github.com/dadadel/pyment/blob/master/pyment/docstring.py)
 * Use enum for sections
 * Add convenience function to parse all docs in file

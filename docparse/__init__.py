@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 import inspect
+from pkg_resources import iter_entry_points
 from typing import Callable, Dict, Optional, Sequence, cast
 
 
@@ -109,7 +110,7 @@ class DocString:
         return self.directives[name]
 
 
-REGISTRY: Dict[DocStyle, Callable[[str], DocString]] = {}
+REGISTRY: Dict[DocStyle, Callable[[str], DocString]] = None
 
 
 def parser(docstyle: DocStyle):
@@ -118,6 +119,7 @@ def parser(docstyle: DocStyle):
     def decorator(f):
         REGISTRY[docstyle] = f
         return f
+
     return decorator
 
 
@@ -142,3 +144,18 @@ def get_docstring(obj) -> str:
         return inspect.cleandoc(cast(str, obj))
     else:
         return inspect.getdoc(obj)
+
+
+if REGISTRY is None:
+    REGISTRY = {}
+    defaults = {}
+    # process entry points, defer loading default parsers
+    for entry_point in iter_entry_points(group="docparse.parsers"):
+        if entry_point.name.endswith("_default"):
+            defaults[entry_point.name[:-8]] = entry_point
+        else:
+            entry_point.load()
+    # load default parsers for doc styles that haven't been overridden
+    for name, entry_point in defaults.items():
+        if name not in REGISTRY:
+            entry_point.load()
