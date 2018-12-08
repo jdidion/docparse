@@ -1,11 +1,11 @@
 tests = tests
-module = clicktypes
+module = docparse
 #pytestops = "--full-trace"
 #pytestops = "-v -s"
 repo = jdidion/$(module)
 desc = Release $(version)
 
-BUILD = poetry build && pip install --upgrade dist/clicktypes-0.1.0-py3-none-any.whl $(installargs)
+BUILD = poetry build && pip install --upgrade dist/$(module)-$(version)-py3-none-any.whl $(installargs)
 TEST = pytest $(pytestops) $(tests)
 
 all:
