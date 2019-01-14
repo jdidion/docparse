@@ -1,5 +1,6 @@
 tests = tests
 module = docparse
+version = 0.2.0
 #pytestops = "--full-trace"
 #pytestops = "-v -s"
 repo = jdidion/$(module)
@@ -21,10 +22,6 @@ test:
 docs:
 	make -C docs api
 	make -C docs html
-
-readme:
-	pandoc --from=markdown --to=rst --output=README.rst README.md
-	pandoc --from=markdown --to=rst --output=CHANGES.rst CHANGES.md
 
 lint:
 	pylint $(module)

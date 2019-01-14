@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from enum import Enum
 import inspect
 from pkg_resources import iter_entry_points
@@ -11,9 +10,9 @@ class DocStyle(Enum):
     GOOGLE = "google"
 
 
-@dataclass
 class Paragraphs:
-    paragraphs: Sequence[str]
+    def __init__(self, paragraphs: Sequence[str]):
+        self.paragraphs = paragraphs
 
     def __len__(self):
         return len(self.paragraphs)
@@ -23,6 +22,9 @@ class Paragraphs:
 
     def __str__(self):
         return "\n".join(self.paragraphs)
+
+    def __eq__(self, other: "Paragraphs"):
+        return str(self.paragraphs) == str(other.paragraphs)
 
     @staticmethod
     def from_lines(lines: Sequence[str]) -> "Paragraphs":
@@ -44,23 +46,39 @@ class Paragraphs:
         return Paragraphs(paragraphs)
 
 
-@dataclass
 class Named:
-    names: str
-    description: Paragraphs = None
+    def __init__(self, names: str, description: Optional[Paragraphs] = None):
+        self.names = names
+        self.description = description
+
+    def __eq__(self, other: "Named"):
+        return self.names == other.names and self.description == other.description
 
 
-@dataclass
 class Typed:
-    datatype: str
-    description: Paragraphs = None
+    def __init__(self, datatype: str, description: Optional[Paragraphs] = None):
+        self.datatype = datatype
+        self.description = description
+
+    def __eq__(self, other: "Typed"):
+        return self.datatype == other.names and self.description == other.description
 
 
-@dataclass
 class Field:
-    name: str
-    datatype: str = None
-    description: Paragraphs = None
+    def __init__(
+        self, name: str, datatype: Optional[str] = None,
+        description: Optional[Paragraphs] = None
+    ):
+        self.name = name
+        self.datatype = datatype
+        self.description = description
+
+    def __eq__(self, other: "Field"):
+        return (
+            self.name == other.name and
+            self.datatype == other.names and
+            self.description == other.description
+        )
 
 
 class DocString:
